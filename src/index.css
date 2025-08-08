@@ -108,7 +108,6 @@ All colors MUST be HSL.
     --brand-2: 210 100% 65%;
     --hero-foreground: 0 0% 100%;
     --gradient-hero: linear-gradient(135deg, hsl(var(--brand-1)) 0%, hsl(var(--brand-2)) 100%);
-
     --shadow-glow: 0 10px 30px -10px hsla(262,83%,66%,0.45), 0 0 40px hsla(210,100%,65%,0.40);
     --shadow-elevated: 0 12px 30px -12px hsla(210,40%,98%,0.20);
   }
