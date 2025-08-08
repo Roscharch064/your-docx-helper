@@ -56,11 +56,8 @@ const Index: React.FC = () => {
         const file = files[selectedIndex];
         const data = await file.arrayBuffer();
         const pdfjs = await import("pdfjs-dist");
-        // Set up worker using Vite's ?worker syntax
-        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-          'pdfjs-dist/build/pdf.worker.mjs',
-          import.meta.url
-        ).toString();
+        // Use a working CDN for the worker
+        pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
         // @ts-ignore
         const loadingTask = pdfjs.getDocument({ data });
         const doc = await loadingTask.promise;
@@ -231,14 +228,19 @@ const Index: React.FC = () => {
       </main>
 
       {/* Progress Modal */}
-      <Dialog open={converting}>
+      <Dialog open={converting} onOpenChange={() => setConverting(false)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Convertendo documentos</DialogTitle>
             <DialogDescription>{progressMsg}</DialogDescription>
           </DialogHeader>
           <Progress value={progressValue} />
-          <p className="text-sm text-muted-foreground mt-2">{progressValue}%</p>
+          <div className="flex justify-between items-center mt-2">
+            <p className="text-sm text-muted-foreground">{progressValue}%</p>
+            <Button variant="outline" size="sm" onClick={() => setConverting(false)}>
+              Fechar
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -264,11 +266,8 @@ export default Index;
 async function extractTextFromPdf(file: File, useOcr: boolean, setMsg: (m: string) => void): Promise<string> {
   const buffer = await file.arrayBuffer();
   const pdfjs = await import("pdfjs-dist");
-  // Set up worker using Vite's module resolution
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.mjs',
-    import.meta.url
-  ).toString();
+  // Use a working CDN for the worker
+  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   // @ts-ignore
   const loadingTask = pdfjs.getDocument({ data: buffer });
   const doc = await loadingTask.promise;
