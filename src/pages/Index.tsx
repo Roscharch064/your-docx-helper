@@ -56,8 +56,8 @@ const Index: React.FC = () => {
         const file = files[selectedIndex];
         const data = await file.arrayBuffer();
         const pdfjs = await import("pdfjs-dist");
-        // Use a working CDN for the worker
-        pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+        // Disable worker to avoid loading issues
+        pdfjs.GlobalWorkerOptions.workerSrc = "";
         // @ts-ignore
         const loadingTask = pdfjs.getDocument({ data });
         const doc = await loadingTask.promise;
@@ -266,8 +266,8 @@ export default Index;
 async function extractTextFromPdf(file: File, useOcr: boolean, setMsg: (m: string) => void): Promise<string> {
   const buffer = await file.arrayBuffer();
   const pdfjs = await import("pdfjs-dist");
-  // Use a working CDN for the worker
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+  // Disable worker to avoid loading issues
+  pdfjs.GlobalWorkerOptions.workerSrc = "";
   // @ts-ignore
   const loadingTask = pdfjs.getDocument({ data: buffer });
   const doc = await loadingTask.promise;
