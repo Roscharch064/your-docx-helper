@@ -56,11 +56,11 @@ const Index: React.FC = () => {
         const file = files[selectedIndex];
         const data = await file.arrayBuffer();
         const pdfjs = await import("pdfjs-dist");
-        // Configure worker to use the locally installed version
-        const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.mjs");
-        pdfjs.GlobalWorkerOptions.workerSrc = URL.createObjectURL(
-          new Blob([`import("${pdfjsWorker.default}");`], { type: "application/javascript" })
-        );
+        // Set up worker using Vite's ?worker syntax
+        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          'pdfjs-dist/build/pdf.worker.mjs',
+          import.meta.url
+        ).toString();
         // @ts-ignore
         const loadingTask = pdfjs.getDocument({ data });
         const doc = await loadingTask.promise;
@@ -264,11 +264,11 @@ export default Index;
 async function extractTextFromPdf(file: File, useOcr: boolean, setMsg: (m: string) => void): Promise<string> {
   const buffer = await file.arrayBuffer();
   const pdfjs = await import("pdfjs-dist");
-  // Configure worker to use the locally installed version
-  const pdfjsWorker = await import("pdfjs-dist/build/pdf.worker.mjs");
-  pdfjs.GlobalWorkerOptions.workerSrc = URL.createObjectURL(
-    new Blob([`import("${pdfjsWorker.default}");`], { type: "application/javascript" })
-  );
+  // Set up worker using Vite's module resolution
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.mjs',
+    import.meta.url
+  ).toString();
   // @ts-ignore
   const loadingTask = pdfjs.getDocument({ data: buffer });
   const doc = await loadingTask.promise;
